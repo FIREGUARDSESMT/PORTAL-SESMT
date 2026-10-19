@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SESMT · Sistemas</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f7;--surface:#fff;--border:#e1e4e8;--text:#1b2430;--muted:#5e6a78;--primary:#17415f;--primary-soft:#e6eef4;--danger:#a3302a;--ok:#1f6b4c}
+@media (prefers-color-scheme:dark){:root{--bg:#12161d;--surface:#1a1f29;--border:#2c3441;--text:#e7ebf0;--muted:#a3adba;--primary:#5b9bd1;--primary-soft:#1c2c3a;--danger:#e07a6c;--ok:#5cc490}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans",system-ui,"Segoe UI",sans-serif;font-size:14px;line-height:1.45}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:20px 40px;background:var(--surface);border-bottom:1px solid var(--border)}
+.mark{width:32px;height:32px;border-radius:8px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center}
+.icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+header h1{margin:0;font-size:18px;font-weight:600}
+.right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+main{max-width:1000px;margin:0 auto;padding:40px 24px}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+h2{font-size:26px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.grid.lista{grid-template-columns:1fr;gap:10px}
+.card{display:flex;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;color:inherit;text-decoration:none;min-height:190px}
+a.card:hover{border-color:var(--primary);box-shadow:0 4px 14px rgba(20,30,50,.08)}
+.ico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;flex:none}
+.ico .icon{width:26px;height:26px;stroke-width:1.6}
+.card .t{font-size:17px;font-weight:600}
+.card .d{color:var(--muted);font-size:13px;word-break:break-word}
+.card .s{margin-top:auto;padding-top:12px;font-size:13px;font-weight:600;color:var(--primary);display:flex;align-items:center;gap:6px}
+.card .u{margin-top:6px;font-size:12px;color:var(--muted);word-break:break-all}
+.lista .card{flex-direction:row;align-items:center;gap:16px;min-height:0;padding:14px 18px}
+.lista .ico{margin:0;width:44px;height:44px}
+.lista .corpo{flex:1;min-width:0}
+.lista .card .s{margin:0;padding:0}
+.lista .tools{margin:0}
+.card.off{opacity:.6}
+.card.off .s{color:var(--muted)}
+.tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.seg{display:inline-flex;border:1px solid #cbd2da;border-radius:8px;overflow:hidden}
+.seg button{height:36px;padding:0 14px;border:0;background:var(--surface);color:var(--muted);font-family:inherit;font-weight:500;font-size:13px;cursor:pointer}
+.seg button.on{background:var(--primary-soft);color:var(--primary)}
+.picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+.picker label{margin:0;cursor:pointer}
+.picker input{position:absolute;opacity:0;pointer-events:none}
+.picker .opt{display:flex;align-items:center;justify-content:center;height:46px;border:1px solid var(--border);border-radius:10px;color:var(--muted)}
+.picker input:checked + .opt{border:2px solid var(--primary);color:var(--primary);background:var(--primary-soft)}
+.picker input:focus-visible + .opt{outline:2px solid var(--primary)}
+.cores{display:flex;gap:10px;flex-wrap:wrap}
+.cores .dotc{display:block;width:32px;height:32px;border-radius:50%;border:3px solid transparent;box-shadow:0 0 0 1px var(--border)}
+.cores input:checked + .dotc{border-color:var(--surface);box-shadow:0 0 0 3px var(--text)}
+.cores input:focus-visible + .dotc{outline:2px solid var(--primary);outline-offset:3px}
+.cores label,.cores .lab{margin:0;cursor:pointer}
+.cores input{position:absolute;opacity:0;pointer-events:none}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 16px;background:var(--surface);border:1px dashed var(--border);border-radius:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:8px;border:1px solid #cbd2da;background:var(--surface);color:var(--text);font-weight:500;font-size:13px;font-family:inherit;cursor:pointer}
+.btn:hover{border-color:var(--primary)}
+.btn.pri{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.sm{height:32px;padding:0 10px;font-size:12px}
+.btn.del{color:var(--danger)}
+.back{position:fixed;inset:0;background:rgba(10,15,25,.5);display:flex;align-items:flex-start;justify-content:center;padding:6vh 16px;overflow-y:auto;z-index:50}
+.modal{background:var(--surface);border-radius:12px;width:100%;max-width:480px;padding:24px;display:flex;flex-direction:column;gap:12px}
+.modal h3{margin:0;font-size:18px}
+label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:4px}
+input[type=text],input[type=email],input[type=password],textarea{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--text);font:inherit}
+textarea{min-height:70px;resize:vertical}
+.err{color:var(--danger);font-size:13px;min-height:18px}
+.actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--text);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:13px;z-index:80;max-width:320px}
+.toast.err{background:var(--danger);color:#fff}
+@media(max-width:640px){header{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <span class="mark"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></span>
+  <h1>SESMT</h1>
+  <div class="right" id="right"></div>
+</header>
+<main>
+  <div class="top">
+    <div><h2>Sistemas do SESMT</h2><p class="sub">Escolha o sistema que deseja abrir. Cada sistema tem o seu próprio login.</p></div>
+    <div id="bar"></div>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+<div id="modalRoot"></div>
+<script type="module">
+import { firebaseConfig } from './firebase-config.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import * as FS from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import * as AU from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+const COLECAO = 'sesmt_cards';
+let visao = 'grade'; try { visao = localStorage.getItem('sesmt_visao') === 'lista' ? 'lista' : 'grade'; } catch (e) {}
+const state = { cards: [], user: null, editando: false, carregado: false };
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ICONES = {
+  pessoas:['Pessoas','<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>'],
+  escudo:['Escudo','<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>'],
+  fogo:['Fogo','<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>'],
+  checklist:['Checklist','<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 14l2 2 4-4"/>'],
+  documento:['Documento','<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>'],
+  calendario:['Calendário','<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+  grafico:['Gráfico','<path d="M3 3v18h18"/><path d="M8 17V11M13 17V7M18 17v-4"/>'],
+  engrenagem:['Engrenagem','<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>'],
+  saude:['Saúde','<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>'],
+  capacete:['Capacete','<path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/><path d="M4 15v-3a6 6 0 0 1 6-6"/><path d="M14 6a6 6 0 0 1 6 6v3"/>'],
+  predio:['Prédio','<path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16"/><path d="M14 10h5a1 1 0 0 1 1 1v10"/><path d="M3 21h18M8 8h2M8 12h2M8 16h2"/>'],
+  pasta:['Pasta','<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'],
+  site:['Site','<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'],
+  alerta:['Alerta','<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/>'],
+  treinamento:['Treinamento','<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>'],
+  busca:['Busca','<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>'],
+  atencao:['Atenção','<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>']
+};
+const CORES = [['Azul','#17415F'],['Verde','#1F6B4C'],['Laranja','#B45309'],['Vermelho','#A3302A'],['Roxo','#5B3E96'],['Cinza','#4A5663']];
+const ICONE_PADRAO = 'site', COR_PADRAO = '#17415F';
+const svgIco = k => '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">' + (ICONES[k] || ICONES[ICONE_PADRAO])[1] + '</svg>';
+const corSegura = c => /^#[0-9a-fA-F]{6}$/.test(c || '') ? c : COR_PADRAO;
+const seta = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const plus = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+
+let db, auth;
+try { const app = initializeApp(firebaseConfig); db = FS.getFirestore(app); auth = AU.getAuth(app); }
+catch (e) { $('grid').innerHTML = '<div class="empty">Configuração do Firebase ausente. Preencha o arquivo firebase-config.js.</div>'; throw e; }
+
+function toast(msg, erro) {
+  const t = document.createElement('div'); t.className = 'toast' + (erro ? ' err' : ''); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 4000);
+}
+function msgErro(e) { return e && e.code === 'permission-denied' ? 'Sem permissão. Só o administrador pode editar os cards.' : 'Não foi possível salvar. Tente novamente.'; }
+
+// Aceita só endereços http(s) ou relativos. Bloqueia javascript: e similares.
+function urlValida(u) {
+  try { const x = new URL(u, location.href); return x.protocol === 'http:' || x.protocol === 'https:'; } catch (e) { return false; }
+}
+
+function render() {
+  const r = $('right');
+  r.innerHTML = state.user
+    ? `<span>${esc(state.user.email)}</span><button class="btn" id="bEdit">${state.editando ? 'Concluir edição' : 'Editar cards'}</button><button class="btn" id="bOut">Sair</button>`
+    : `<button class="btn" id="bIn">Entrar para editar</button>`;
+  if (state.user) {
+    $('bEdit').onclick = () => { state.editando = !state.editando; render(); };
+    $('bOut').onclick = () => AU.signOut(auth);
+  } else $('bIn').onclick = abrirLogin;
+
+  $('bar').innerHTML = `<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><div class="seg" role="group" aria-label="Modo de exibição"><button id="vGrade" class="${visao === 'grade' ? 'on' : ''}">Grade</button><button id="vLista" class="${visao === 'lista' ? 'on' : ''}">Lista</button></div>${state.user && state.editando ? `<button class="btn pri" id="bAdd">${plus}Adicionar card</button>` : ''}</div>`;
+  $('vGrade').onclick = () => setVisao('grade');
+  $('vLista').onclick = () => setVisao('lista');
+  if ($('bAdd')) $('bAdd').onclick = () => abrirForm(null);
+
+  const g = $('grid');
+  g.className = 'grid' + (visao === 'lista' ? ' lista' : '');
+  if (!state.carregado) { g.innerHTML = '<div class="empty">Carregando…</div>'; return; }
+  if (!state.cards.length) {
+    g.innerHTML = '<div class="empty">Nenhum sistema cadastrado ainda.' + (state.user && state.editando ? '' : '<br>O administrador pode entrar e adicionar os cards.') + '</div>';
+    return;
+  }
+  g.innerHTML = state.cards.map((c, i) => {
+    const cor = corSegura(c.cor);
+    const ic = `<span class="ico" style="background:${cor}1f;color:${cor}">${svgIco(c.icone)}</span>`;
+    const corpo = `<div class="corpo"><div class="t">${esc(c.nome)}</div><div class="d">${esc(c.desc)}</div></div>`;
+    if (state.user && state.editando) {
+      return `<div class="card">${ic}${corpo}<div class="u">${c.url ? esc(c.url) + (c.novaAba ? ' (nova aba)' : '') : 'Sem link ainda (aparece como "Em breve")'}</div>
+        <div class="tools">
+          <button class="btn sm" data-a="up" data-i="${i}" ${i === 0 ? 'disabled' : ''} aria-label="Mover para cima">Subir</button>
+          <button class="btn sm" data-a="down" data-i="${i}" ${i === state.cards.length - 1 ? 'disabled' : ''} aria-label="Mover para baixo">Descer</button>
+          <button class="btn sm" data-a="edit" data-i="${i}">Editar</button>
+          <button class="btn sm del" data-a="del" data-i="${i}">Excluir</button>
+        </div></div>`;
+    }
+    if (!c.url) return `<div class="card off">${ic}${corpo}<div class="s">Em breve</div></div>`;
+    return `<a class="card" href="${esc(c.url)}"${c.novaAba ? ' target="_blank" rel="noopener"' : ''}>${ic}${corpo}<div class="s">Abrir ${seta}</div></a>`;
+  }).join('');
+  g.querySelectorAll('[data-a]').forEach(b => b.onclick = () => acao(b.dataset.a, Number(b.dataset.i)));
+}
+
+function setVisao(v) { visao = v; try { localStorage.setItem('sesmt_visao', v); } catch (e) {} render(); }
+
+async function acao(a, i) {
+  const c = state.cards[i];
+  try {
+    if (a === 'edit') return abrirForm(c);
+    if (a === 'del') { if (confirm('Excluir o card "' + c.nome + '"?')) await FS.deleteDoc(FS.doc(db, COLECAO, c.id)); return; }
+    const outro = state.cards[a === 'up' ? i - 1 : i + 1];
+    if (!outro) return;
+    await Promise.all([
+      FS.updateDoc(FS.doc(db, COLECAO, c.id), { ordem: outro.ordem }),
+      FS.updateDoc(FS.doc(db, COLECAO, outro.id), { ordem: c.ordem })
+    ]);
+  } catch (e) { console.error(e); toast(msgErro(e), true); }
+}
+
+function fechar() { $('modalRoot').innerHTML = ''; }
+function abrirModal(html) { $('modalRoot').innerHTML = '<div class="back"><div class="modal">' + html + '</div></div>'; }
+
+function abrirForm(card) {
+  const icAtual = card && ICONES[card.icone] ? card.icone : ICONE_PADRAO;
+  const corAtual = corSegura(card ? card.cor : COR_PADRAO);
+  const icones = Object.keys(ICONES).map(k => `<label title="${ICONES[k][0]}"><input type="radio" name="fIcone" value="${k}" ${k === icAtual ? 'checked' : ''} aria-label="${ICONES[k][0]}"><span class="opt">${svgIco(k)}</span></label>`).join('');
+  const cores = CORES.map(c => `<label title="${c[0]}"><input type="radio" name="fCor" value="${c[1]}" ${c[1].toLowerCase() === corAtual.toLowerCase() ? 'checked' : ''} aria-label="${c[0]}"><span class="dotc" style="background:${c[1]}"></span></label>`).join('');
+  abrirModal(`<h3>${card ? 'Editar card' : 'Novo card'}</h3>
+    <div><label for="fNome">Nome do sistema *</label><input type="text" id="fNome" value="${esc(card ? card.nome : '')}"></div>
+    <div><label for="fDesc">Descrição</label><textarea id="fDesc">${esc(card ? card.desc : '')}</textarea></div>
+    <div><label for="fUrl">Link do sistema (opcional)</label><input type="text" id="fUrl" placeholder="https://..." value="${esc(card ? card.url : '')}"><div style="font-size:12px;color:var(--muted);margin-top:4px">Sem link, o card aparece apagado, como "Em breve". Você pode colocar o link depois.</div></div>
+    <div><label>Ícone</label><div class="picker">${icones}</div></div>
+    <div><label>Cor</label><div class="cores">${cores}</div></div>
+    <label style="display:flex;gap:8px;align-items:center;font-weight:400;color:var(--text)"><input type="checkbox" id="fAba" ${card && card.novaAba ? 'checked' : ''}> Abrir em outra aba</label>
+    <div class="err" id="fErr" role="alert"></div>
+    <div class="actions"><button class="btn" id="fCancel">Cancelar</button><button class="btn pri" id="fSave">Salvar</button></div>`);
+  $('fCancel').onclick = fechar;
+  $('fSave').onclick = async () => {
+    const nome = $('fNome').value.trim(), desc = $('fDesc').value.trim(), url = $('fUrl').value.trim();
+    if (!nome) { $('fErr').textContent = 'Informe o nome do sistema.'; return; }
+    if (url && !urlValida(url)) { $('fErr').textContent = 'Informe um link válido, começando com https://, ou deixe em branco.'; return; }
+    const ic = document.querySelector('input[name="fIcone"]:checked');
+    const co = document.querySelector('input[name="fCor"]:checked');
+    const dados = { nome, desc, url, novaAba: $('fAba').checked, icone: ic ? ic.value : ICONE_PADRAO, cor: co ? co.value : COR_PADRAO };
+    try {
+      if (card) await FS.updateDoc(FS.doc(db, COLECAO, card.id), dados);
+      else await FS.addDoc(FS.collection(db, COLECAO), { ...dados, ordem: state.cards.reduce((m, c) => Math.max(m, c.ordem || 0), 0) + 1 });
+      fechar();
+    } catch (e) { console.error(e); $('fErr').textContent = msgErro(e); }
+  };
+  $('fNome').focus();
+}
+
+function abrirLogin() {
+  abrirModal(`<h3>Entrar para editar</h3>
+    <form id="lf" style="display:flex;flex-direction:column;gap:12px">
+      <div><label for="lE">E-mail</label><input type="email" id="lE" autocomplete="username" required></div>
+      <div><label for="lP">Senha</label><input type="password" id="lP" autocomplete="current-password" required></div>
+      <div class="err" id="lErr" role="alert"></div>
+      <div class="actions"><button type="button" class="btn" id="lCancel">Cancelar</button><button type="submit" class="btn pri">Entrar</button></div>
+    </form>`);
+  $('lCancel').onclick = fechar;
+  $('lf').addEventListener('submit', async ev => {
+    ev.preventDefault(); $('lErr').textContent = '';
+    try { await AU.signInWithEmailAndPassword(auth, $('lE').value.trim(), $('lP').value); fechar(); }
+    catch (e) { $('lErr').textContent = e && e.code === 'auth/too-many-requests' ? 'Muitas tentativas. Aguarde alguns minutos.' : 'E-mail ou senha incorretos.'; }
+  });
+  $('lE').focus();
+}
+
+AU.onAuthStateChanged(auth, u => { state.user = u; if (!u) state.editando = false; render(); });
+FS.onSnapshot(FS.collection(db, COLECAO), snap => {
+  state.cards = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+  state.carregado = true; render();
+}, err => { console.error(err); state.carregado = true; state.cards = []; render(); toast('Não foi possível carregar os cards.', true); });
+render();
+</script>
+</body>
+</html>
